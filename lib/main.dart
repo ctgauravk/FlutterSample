@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:flutter/services.dart';
-// import 'package:intl/intl.dart';
-// import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 
 GlobalKey globalKey = GlobalKey();
@@ -71,22 +69,19 @@ class _MyHomePageState extends State<MyHomePage> {
     CleverTapPlugin.createNotificationChannelWithGroupId(
         "gtid2", "Test Notification Flutter", "Flutter Test", 5, "groupId", true);
     var stuff = ["bags", "shoes"];
-    CleverTapPlugin.onUserLogin({
-      'Name': 'Test 28',
-      'Identity': 'test28',
-      'Email': 'test28@test.com',
-      'Phone': '+14364532109',
-      'MSG-email': true,
-      'MSG-push': false,
-      'MSG-sms': true,
-      'MSG-whatsapp': true,
-      'DOB':'23-06-2001'
-    });
+    // CleverTapPlugin.onUserLogin({
+    //   'Name': 'Test 28',
+    //   'Identity': 'test28',
+    //   'Email': 'test28@test.com',
+    //   'Phone': '+14364532109',
+    //   'MSG-email': true,
+    //   'MSG-push': false,
+    //   'MSG-sms': true,
+    //   'MSG-whatsapp': true,
+    //   'DOB':'23-06-2001'
+    // });
     SharedPreferenceAppGroup.setString('email', 'test28@test.com');
     getMyParams();
-
-    //For Killed State Handler
-    platform.setMethodCallHandler(nativeMethodCallHandler);
 
     CleverTapPlugin.initializeInbox();
     var initURl = CleverTapPlugin.getInitialUrl();
@@ -126,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void activateCleverTapFlutterPluginHandlers() {
     _clevertapPlugin = CleverTapPlugin();
 
-    //Handler for receiving Push Clicked Payload in FG and BG state
+    //Handler for receiving Push Clicked Payload
     _clevertapPlugin.setCleverTapPushClickedPayloadReceivedHandler(
         pushClickedPayloadReceived);
     _clevertapPlugin.setCleverTapInboxDidInitializeHandler(inboxDidInitialize);
@@ -137,27 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-  //For Push Notification Clicked Payload in FG and BG state
   void pushClickedPayloadReceived(Map<String, dynamic> map) {
     print("pushClickedPayloadReceived called");
-    setState(() async {
-      var data = jsonEncode(map);
-      print("on Push Click Payload = $data");
-    });
   }
 
-  //For Push Notification Clicked Payload in killed state
-  Future<dynamic> nativeMethodCallHandler(MethodCall methodCall) async {
-    print("killed state called!");
-    switch (methodCall.method) {
-      case "onPushNotificationClicked":
-        debugPrint("onPushNotificationClicked in dart");
-        debugPrint("Clicked Payload in Killed state: ${methodCall.arguments}");
-        return "This is from android!!";
-      default:
-        return "Nothing";
-    }
-  }
+
 
   void inboxDidInitialize() {
     setState(() {
