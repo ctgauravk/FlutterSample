@@ -11,9 +11,9 @@
 		1D163E30432854E051E5C158 /* Pods_fct_template.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82674CB36DA20C3FBC8A43C3 /* Pods_fct_template.framework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		7ED28145FAB4ECF884BE89DE /* Pods_fct_push.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDA6BB7963071C776038DBA /* Pods_fct_push.framework */; };
 		914FD7B02844A9AE00D71A81 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914FD7AF2844A9AE00D71A81 /* NotificationService.swift */; };
 		914FD7B42844A9AE00D71A81 /* fct_push.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 914FD7AD2844A9AE00D71A81 /* fct_push.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		915103E72B3AE70700389693 /* Pods_fct_push.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDDA6BB7963071C776038DBA /* Pods_fct_push.framework */; };
 		9183724A289D3CD80053C40B /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91837249289D3CD80053C40B /* UserNotifications.framework */; };
 		9183724C289D3CD80053C40B /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9183724B289D3CD80053C40B /* UserNotificationsUI.framework */; };
 		9183724F289D3CD80053C40B /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9183724E289D3CD80053C40B /* NotificationViewController.swift */; };
@@ -112,7 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7ED28145FAB4ECF884BE89DE /* Pods_fct_push.framework in Frameworks */,
+				915103E72B3AE70700389693 /* Pods_fct_push.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

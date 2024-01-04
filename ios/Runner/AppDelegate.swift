@@ -1,8 +1,7 @@
 import UIKit
-import Flutter
 import CleverTapSDK
 import clevertap_plugin
-
+import Flutter
 @available(iOS 10.0, *)
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {

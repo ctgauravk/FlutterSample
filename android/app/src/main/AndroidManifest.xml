@@ -54,12 +54,12 @@
            android:value="56c-216"/>
 
 
-       <service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
-           android:exported="true">
-           <intent-filter>
-               <action android:name="com.google.firebase.MESSAGING_EVENT" />
-           </intent-filter>
-       </service>
+<!--       <service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"-->
+<!--           android:exported="true">-->
+<!--           <intent-filter>-->
+<!--               <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--           </intent-filter>-->
+<!--       </service>-->
 
 
 
