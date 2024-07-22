@@ -18,6 +18,7 @@ class NotificationViewController: CTNotificationViewController {
         let notificationPayload = response?.notification.request.content.userInfo
         if (response?.actionIdentifier == "action_2") {
             CleverTap.sharedInstance()?.recordNotificationClickedEvent(withData: notificationPayload ?? "")
+            
         }
         super.userDidReceive(response)
 

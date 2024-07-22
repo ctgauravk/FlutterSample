@@ -11,6 +11,7 @@ import UserNotifications
 import CTNotificationService
 import CleverTapSDK
 
+
  class NotificationService: CTNotificationServiceExtension {
     
     var contentHandler: ((UNNotificationContent) -> Void)?
@@ -21,6 +22,8 @@ import CleverTapSDK
         
         //push impression for logged in user
         let defaults = UserDefaults.init(suiteName: "group.flutter.fct")
+        
+       
     
         let email2 = defaults?.value(forKey: "email")
         print("email2 \(email2)")
