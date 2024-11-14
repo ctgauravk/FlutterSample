@@ -27,7 +27,7 @@ import Flutter
         UNUserNotificationCenter.current().delegate = self
         CleverTap.sharedInstance()?.setUrlDelegate(self)
         CleverTap.sharedInstance()?.setPushNotificationDelegate(self)
-        let defaults = UserDefaults.init(suiteName: "group.flutter.fct")
+        let defaults = UserDefaults.init(suiteName: "group.clevertap.fdemo")
         
         
 //        CleverTap.sharedInstance()?.notifyApplicationLaunched(withOptions: self)
@@ -92,7 +92,6 @@ import Flutter
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
         
         var channel: FlutterMethodChannel?
-        // Assuming self.controller is an instance of FlutterViewController
         if let controller = self.window?.rootViewController as? FlutterViewController {
             channel = FlutterMethodChannel(name: "myChannel", binaryMessenger: controller.binaryMessenger)
             channel?.invokeMethod("pushClickedResponse", arguments: response.notification.request.content.userInfo)

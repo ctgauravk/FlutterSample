@@ -21,7 +21,7 @@ import CleverTapSDK
         print("in notification service")
         
         //push impression for logged in user
-        let defaults = UserDefaults.init(suiteName: "group.flutter.fct")
+        let defaults = UserDefaults.init(suiteName: "group.clevertap.fdemo")
         
        
     

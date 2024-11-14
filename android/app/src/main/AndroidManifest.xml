@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.clevertap.fct">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Required to allow the app to send events and user profile information -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -46,20 +45,36 @@
            android:name="com.google.firebase.messaging.default_notification_channel_id"
            android:value="Default" />
 
-       <meta-data
-           android:name="CLEVERTAP_ACCOUNT_ID"
-       android:value="6ZR-965-446Z"/>
-        <meta-data
-           android:name="CLEVERTAP_TOKEN"
-           android:value="56c-216"/>
+
+<!--       <meta-data-->
+<!--           android:name="CLEVERTAP_ACCOUNT_ID"-->
+<!--           android:value="TEST-W8W-6WR-846Z" />-->
+<!--       <meta-data-->
+<!--           android:name="CLEVERTAP_TOKEN"-->
+<!--           android:value="TEST-206-0b0" />-->
 
 
-<!--       <service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"-->
-<!--           android:exported="true">-->
-<!--           <intent-filter>-->
-<!--               <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
-<!--           </intent-filter>-->
-<!--       </service>-->
+
+
+<!--              <meta-data-->
+<!--           android:name="CLEVERTAP_ACCOUNT_ID"-->
+<!--           android:value="6ZR-965-446Z"/>-->
+<!--&lt;!&ndash;           android:value="TEST-RZ7-Z94-K95Z"/>&ndash;&gt;-->
+
+
+<!--        <meta-data-->
+<!--           android:name="CLEVERTAP_TOKEN"-->
+<!--            android:value="56c-216"/>-->
+<!--&lt;!&ndash;            android:value="TEST-4c1-a12"/>&ndash;&gt;-->
+
+
+
+       <service android:name="com.clevertap.android.sdk.pushnotification.fcm.FcmMessageListenerService"
+           android:exported="true">
+           <intent-filter>
+               <action android:name="com.google.firebase.MESSAGING_EVENT" />
+           </intent-filter>
+       </service>
 
 
 

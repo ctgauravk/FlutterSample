@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 // import 'package:intl/intl.dart';
 // import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:shared_preference_app_group/shared_preference_app_group.dart';
@@ -16,7 +18,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  static const methodChannelName = "nativeMethodCallHandler";
 
   // This widget is the root of your application.
   @override
@@ -40,25 +41,52 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
 class _MyHomePageState extends State<MyHomePage> {
   var inboxInitialized = false;
   late CleverTapPlugin _clevertapPlugin;
+  static late CleverTapPlugin _uaeCtInstance;
   var optOut = false;
   var offLine = false;
   var enableDeviceNetworkingInfo = false;
-  String appGroupID = 'group.flutter.fct';
+  String appGroupID = 'group.clevertap.fdemo';
 
-  //for killed state notification clicked
+   //for killed state notification clicked
   static const platform = MethodChannel("myChannel");
+   int _counter = 0;
+
 
   Map<String, dynamic> myParams = {
     'email': 'null'
   };
+
+
+  Future<void> getUaeInstance() async {
+    CleverTapPlugin random;
+    try {
+      random = await platform.invokeMethod('uaeInstance');
+    } on PlatformException catch (e) {
+      random = CleverTapPlugin();
+    }
+    setState(() {
+      _uaeCtInstance = random;
+
+    });
+
+    activatePlugins();
+    var eventData = {
+      'Stuff': 'Shirt',
+    };
+
+    CleverTapPlugin.recordEvent("Product viewed", eventData);
+
+  }
   @override
   void initState() {
     super.initState();
 
-    CleverTapPlugin.setDebugLevel(3);
+
+    // multiInstanceHandler.setMethodCallHandler(getMultiInstance);
 
     if (kIsWeb) {
       CleverTapPlugin.init("6ZR-965-446Z", "eu1",null);
@@ -66,32 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     }
     initPlatformState();
-    activateCleverTapFlutterPluginHandlers();
-    CleverTapPlugin.createNotificationChannelGroup("groupId", "groupName");
 
-
-    // CleverTapPlugin.enableDeviceNetworkInfoReporting(true);
-    CleverTapPlugin.createNotificationChannel(
-        "euro", "Test Notification Flutter", "Flutter Test", 5, true);
-    CleverTapPlugin.createNotificationChannelWithGroupId(
-        "gtid1", "Test Notification Flutter", "Flutter Test", 5, "groupId", true);
-
-    CleverTapPlugin.createNotificationChannelWithGroupId(
-        "gtid2", "Test Notification Flutter", "Flutter Test", 5, "groupId", true);
-    var stuff = ["bags", "shoes"];
-    CleverTapPlugin.onUserLogin({
-      'Name': 'Test 28',
-      'Identity': 'test45',
-      'Email': 'test45@test.com',
-      'Phone': '+14364532109',
-      'MSG-email': true,
-      'MSG-push': true,
-      'MSG-sms': true,
-      'MSG-whatsapp': true,
-      'DOB':'23-06-2001'
-    });
-    SharedPreferenceAppGroup.setString('email', 'test28@test.com');
-    // getMyParams();
+    SharedPreferenceAppGroup.setString('email', 'test45@test.com');
+    getMyParams();
 
     //For Killed State Handler
     platform.setMethodCallHandler(nativeMethodCallHandler);
@@ -121,14 +126,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
   }
 
-  Future<void> initPlatformState() async {
-    if (!mounted) return;
+  Future<void> activatePlugins() async {
+    CleverTapPlugin.setDebugLevel(3);
+
+    activateCleverTapFlutterPluginHandlers();
+    CleverTapPlugin.createNotificationChannelGroup("groupId", "groupName");
+
+
+    // CleverTapPlugin.enableDeviceNetworkInfoReporting(true);
+    CleverTapPlugin.createNotificationChannel(
+        "euro", "Test Notification Flutter", "Flutter Test", 5, true);
+    CleverTapPlugin.createNotificationChannelWithGroupId(
+        "gtid1", "Test Notification Flutter", "Flutter Test", 5, "groupId", true);
+
+    DateTime date = DateTime(2021, 11, 18);
+    CleverTapPlugin.createNotificationChannelWithGroupId(
+        "gtid2", "Test Notification Flutter", "Flutter Test", 5, "groupId", true);
+    var stuff = ["bags", "shoes"];
+    CleverTapPlugin.onUserLogin({
+      'Name': 'Test 26',
+      'Identity': 'test45',
+      'Email': 'test45@test.com',
+      'Phone': '+14364532109',
+      'MSG-email': true,
+      'MSG-push': true,
+      'MSG-sms': true,
+      'MSG-whatsapp': true,
+      // 'DOB':'$date
+      'dob': CleverTapPlugin.getCleverTapDate(DateFormat('dd-MM-yyyy').parse("01-01-2000"))
+    });
   }
 
-  void inAppNotificationButtonClicked(Map<String, dynamic>? map) {
-    setState(() {
-      print("InApp called = ${map.toString()}");
-    });
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
   }
 
   void activateCleverTapFlutterPluginHandlers() {
@@ -142,8 +172,57 @@ class _MyHomePageState extends State<MyHomePage> {
         .setCleverTapDisplayUnitsLoadedHandler(onDisplayUnitsLoaded);
     _clevertapPlugin.setCleverTapInAppNotificationButtonClickedHandler(
         inAppNotificationButtonClicked);
+
+
+    _clevertapPlugin.setCleverTapInboxNotificationMessageClickedHandler(
+        inboxNotificationMessageClicked);
   }
 
+
+  void inAppNotificationButtonClicked(Map<String, dynamic>? map) {
+    setState(() {
+      print("InApp called = ${map.toString()}");
+    });
+  }
+
+
+  void inboxNotificationMessageClicked(
+      Map<String, dynamic>? data, int contentPageIndex, int buttonIndex) {
+    this.setState(() {
+      print(
+          "inboxNotificationMessageClicked called = InboxItemClicked at page-index $contentPageIndex with button-index $buttonIndex");
+
+      var deepLink = "";
+      var content = data?['msg']['content'][0];
+      var action = content['action'];
+      var dl_url = action['url'];
+
+
+      var inboxMessageClicked = data?["msg"];
+      if (inboxMessageClicked == null) {
+        return;
+      }
+
+      //The contentPageIndex corresponds to the page index of the content, which ranges from 0 to the total number of pages for carousel templates. For non-carousel templates, the value is always 0, as they only have one page of content.
+      var messageContentObject = inboxMessageClicked["content"][contentPageIndex];
+
+      //The buttonIndex corresponds to the CTA button clicked (0, 1, or 2). A value of -1 indicates the app inbox body/message clicked.
+      if (buttonIndex != -1) {
+        //button is clicked
+        var buttonObject = messageContentObject["action"]["links"][buttonIndex];
+        var buttonType = buttonObject?["type"];
+        print("type of button clicked: $buttonType");
+      } else {
+        //Item's body is clicked
+        print("type/template of App Inbox item: ${inboxMessageClicked["type"]}");
+
+         Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const FirstRoute()),
+        );
+      }
+    });
+  }
 
   //For Push Notification Clicked Payload in FG and BG state
   void pushClickedPayloadReceived(Map<String, dynamic> map) {
@@ -224,9 +303,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: ListTile(
-                  title: const Text("Profile push"),
-                  subtitle: const Text("push your profile"),
-                  onTap: login,
+                  title: const Text("Switch Account"),
+                  subtitle: const Text("UAE Dashboard"),
+                  onTap: getUaeInstance,
                 ),
               ),
             ),
@@ -292,14 +371,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void login() {
-    
-    var profile = {
-      'Photo':
-      "https://i.pinimg.com/originals/39/95/65/399565162c331db08fde4211da835551.jpg",
-      'Name':'Gaurav 12',
-      'Phone':null
-    };
-    CleverTapPlugin.profileSet(profile);
+    //
+    // var profile = {
+    //   'Photo':
+    //   "https://i.pinimg.com/originals/39/95/65/399565162c331db08fde4211da835551.jpg",
+    //   'Name':'Charles Leclerc',
+    //   "Occupation":"F1 Racer",
+    //   "MSG-push-all":true
+    // };
+    // CleverTapPlugin.profileSet(profile);
 
     // CleverTapPlugin.onUserLogin({
     //   'Name': 'Test 66',
@@ -313,14 +393,44 @@ class _MyHomePageState extends State<MyHomePage> {
     //   'DOB':'23-06-2001'
     // });
     // showToast("Pushed profile " + profile.toString());
+    // platform.invokeMethod("multiInstance");
+   // platform.setMethodCallHandler(getMultiInstance);
+   //
+   // Future<void> _generateRandomNumber() async {
+   //   int random;
+   //   try {
+   //     random = await platform.invokeMethod('getRandomNumber');
+   //   } on PlatformException catch (e) {
+   //     random = 0;
+   //   }
+   //   setState(() {
+   //     _counter = random;
+   //   });
+   // }
+
+    // Future<void> _generateRandomNumber() async {
+    //   int random;
+    //   try {
+    //     random = await platform.invokeMethod('getRandomNumber');
+    //   } on PlatformException catch (e) {
+    //     random = 0;
+    //   }
+    //   setState(() {
+    //     // _counter = random;
+    //   });
+    // }
+
+
   }
+
 
   void recordEvent() {
     var eventData = {
       'Stuff': 'Shirt',
     };
 
-    CleverTapPlugin.recordEvent("Button Click", eventData);
+    CleverTapPlugin.recordEvent("Cart Viewed", eventData);
+
   }
 
   void pushNotification() {
@@ -424,5 +534,55 @@ class _MyHomePageState extends State<MyHomePage> {
     for (var i = 0; i < units.length; i++) {
       debugPrint("title= " + units[i].toString());
     }
+  }
+}
+
+
+class FirstRoute extends StatelessWidget {
+  const FirstRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('First Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text('Open route'),
+          onPressed: () {
+            // Navigate to second route when tapped.
+          },
+        ),
+      ),
+    );
+  }
+
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
+
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
+        ),
+      ),
+    );
   }
 }

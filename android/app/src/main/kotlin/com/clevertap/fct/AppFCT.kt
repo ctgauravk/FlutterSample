@@ -24,6 +24,8 @@ class AppFCT : FlutterApplication() {
             DartEntrypoint.createDefault()
         )
 
+
+
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.DEBUG);
         CleverTapAPI.setNotificationHandler(PushTemplateNotificationHandler() as NotificationHandler)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -40,6 +42,8 @@ class AppFCT : FlutterApplication() {
             )
         }
     }
+
+
 
     public fun setCleverTapMethods() {
 //        Log.e("called","")
